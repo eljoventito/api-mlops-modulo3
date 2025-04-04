@@ -1,0 +1,283 @@
+BINARIZE_VARS:
+- tiempo_desde_ultima_negacion
+- dias_ultima_gestion
+- veces_sin_respuesta
+- promedio_dias_entre_gestiones
+- veces_respuesta_negativa
+- Bancos_PLD_Total
+- Cajas_PLD_Total
+- Retail_PLD_Total
+- Bancos_TC_Total
+- Retail_TC_Total
+CATEGORICAL_VARS_WITH_NA_FREQUENT:
+- GENERO
+CATEGORICAL_VARS_WITH_NA_MISSING:
+- ULTIMA_AGRUPACION
+- COMPETITIVIDAD
+FEATURES_TO_DROP:
+- 12M_MONTO
+- 12M_TASA
+- 18M_MONTO
+- 18M_TASA
+- DEPARTAMENTO
+- PROVINCIA
+- DISTRITO_INEI
+- 36M_MONTO
+- 36M_TASA
+- MENSAJE_TASA
+- MENSAJE_VARIACION
+- ULTIMO_RESULTADO
+- ULTIMO_MOTIVO
+- LIMAS
+NUMERICALS_LOG_VARS:
+- 24M_MONTO
+- 24M_TASA
+- EDAD
+NUMERICAL_VARS_WITH_NA:
+- veces_acepto_producto
+- tiempo_desde_ultima_conversion
+- tiempo_desde_ultima_negacion
+- intentos_totales
+- meses_gestionados
+- dias_ultima_gestion
+- veces_sin_respuesta
+- veces_solicitud_seguimiento
+- promedio_dias_entre_gestiones
+- max_intentos_en_un_mes
+- veces_respuesta_positiva
+- veces_respuesta_negativa
+QUAL_MAPPINGS:
+  ESTADO_CIVIL:
+    Casado: 1
+    Missing: 1
+    Otro: 1
+    Soltero: 2
+  GENERO:
+    F: 0
+    M: 1
+    Missing: 0
+    ? ''
+    : 0
+    null: 0
+  MARCA_LABORAL:
+    1_DEPENDIENTE: 2
+    2_DEPEN_INDEPEN: 1
+    3_INDEPENDIENTE: 3
+    4_INFORMAL: 4
+  PRINCIPALIDAD_CONSUMO:
+    DEUDA_EN_BANCOS_GRANDES: 1
+    DEUDA_EN_BANCOS_MEDIANOS: 2
+    DEUDA_EN_CAJAS: 3
+    SIN_DEUDA_CONSUMO: 0
+  ULTIMA_AGRUPACION:
+    CONTACTO_EFECTIVO: 1
+    CONTACTO_NO_EFECTIVO: 1
+    Missing: 2
+    NO_CONTACTO: 0
+    NO_CONTACTO_MAQUINA: 0
+    NO_GESTIONADO: 2
+  ultima_gestion:
+    CONTACTO_EFECTIVO: 1
+    CONTACTO_NO_EFECTIVO: 1
+    Missing: 2
+    NO_CONTACTO: 0
+    NO_GESTIONADO: 2
+bancos_comerciales_pld:
+- PLD_BCP
+- PLD_BBVA
+- PLD_SCOTIA
+- PLD_INTERBANK
+- PLD_PICHINCHA
+- PLD_NACION
+bancos_comerciales_tc:
+- TC_BCP
+- TC_BBVA
+- TC_SCOTIA
+- TC_INTERBANK
+- TC_PICHINCHA
+cajas_ahorro_pld:
+- PLD_C_HUANCAYO
+- PLD_C_AREQUIPA
+- PLD_C_CUSCO
+- PLD_C_PIURA
+- PLD_EFECTIVA
+- PLD_CONFIANZA
+cajas_ahorro_tc: []
+col_drop:
+- TC_BCP
+- TC_BBVA
+- TC_SCOTIA
+- TC_INTERBANK
+- TC_PICHINCHA
+- PLD_BCP
+- PLD_BBVA
+- PLD_SCOTIA
+- PLD_INTERBANK
+- PLD_PICHINCHA
+- PLD_NACION
+- PLD_C_HUANCAYO
+- PLD_C_AREQUIPA
+- PLD_C_CUSCO
+- PLD_C_PIURA
+- PLD_EFECTIVA
+- PLD_CONFIANZA
+- PLD_SAGA
+- PLD_RIPLEY
+- PLD_CREDISCOTIA
+- PLD_MIBANCO
+limpiar_cats:
+- ULTIMA_AGRUPACION
+- GENERO
+- COMPETITIVIDAD
+- PRINCIPALIDAD_CONSUMO
+- MARCA_LABORAL
+- PROPENSION
+- LIMAS
+- MENSAJE_VARIACION
+- RANGO_RCI
+- ESTADO_CIVIL
+- ultima_gestion
+retail_financieras_pld:
+- PLD_SAGA
+- PLD_RIPLEY
+- PLD_CREDISCOTIA
+- PLD_MIBANCO
+retail_financieras_tc:
+- TC_SAGA
+- TC_RIPLEY
+- TC_CENCOSUD
+- TC_OH
+- TC_CREDISCOTIA
+valores_permitidos_cats:
+  COMPETITIVIDAD:
+  - OFERTA MAYOR A ALGUNA DEUDA
+  - null
+  ESTADO_CIVIL:
+  - Soltero
+  - Casado
+  - Otro
+  GENERO:
+  - M
+  - F
+  - null
+  LIMAS:
+  - LIMA CENTRO
+  - FUERA DE LIMA
+  - LIMA OESTE
+  - LIMA NORTE
+  - LIMA ESTE
+  - LIMA SUR
+  - CALLAO
+  MARCA_LABORAL:
+  - 3.INDEPENDIENTE
+  - 2.DEPEN+INDEPEN
+  - 1.DEPENDIENTE
+  - 4.INFORMAL
+  MENSAJE_VARIACION:
+  - MISMA OFERTA Y MAS TASA
+  - CON MAS OFERTA Y MISMA TASA
+  - CON MAS OFERTA Y MAS TASA
+  - CON MAS OFERTA
+  - MISMA OFERTA
+  - MISMA OFERTA Y MENOS TASA
+  - MISMA OFERTA Y MISMA TASA
+  - NUEVA OFERTA
+  - MENOS OFERTA Y MAS TASA
+  - MENOS OFERTA Y MISMA TASA
+  - CON MAS OFERTA Y MENOS TASA
+  - MENOS OFERTA Y MENOS TASA
+  PRINCIPALIDAD_CONSUMO:
+  - DEUDA EN BANCOS GRANDES
+  - SIN DEUDA CONSUMO
+  - DEUDA EN BANCOS MEDIANOS
+  - DEUDA EN CAJAS
+  PROPENSION:
+  - PROPENSION 1
+  - PROPENSION 2
+  RANGO_RCI:
+  - 3. [20%,30%>
+  - 1. <0%,10%>
+  - 4. [30%,60%]
+  - 2. [10%,20%>
+  - 0. SIN DEUDA
+  ULTIMA_AGRUPACION:
+  - CONTACTO NO EFECTIVO
+  - null
+  - NO CONTACTO
+  - NO CONTACTO MAQUINA
+  - CONTACTO EFECTIVO
+  ultima_gestion:
+  - NO GESTIONADO
+  - NO CONTACTO
+  - CONTACTO NO EFECTIVO
+  - CONTACTO EFECTIVO
+
+COLUMNAS_MINIMAS_NECESARIAS:
+- CELULAR1
+- CELULAR2
+- CELULAR3
+- 12M_MONTO
+- 12M_TASA
+- 18M_MONTO
+- 18M_TASA
+- 24M_MONTO
+- 24M_TASA
+- 36M_MONTO
+- 36M_TASA
+- EDAD
+- MARCA_LABORAL
+- DEPARTAMENTO
+- PROVINCIA
+- DISTRITO_INEI
+- LIMAS
+- PROPENSION
+- PLD_NACION
+- PLD_BCP
+- PLD_BBVA
+- PLD_SAGA
+- PLD_SCOTIA
+- PLD_C_HUANCAYO
+- PLD_CREDISCOTIA
+- PLD_INTERBANK
+- PLD_C_AREQUIPA
+- PLD_C_CUSCO
+- PLD_MIBANCO
+- PLD_RIPLEY
+- PLD_C_PIURA
+- PLD_EFECTIVA
+- PLD_PICHINCHA
+- PLD_CONFIANZA
+- TC_BCP
+- TC_SAGA
+- TC_INTERBANK
+- TC_BBVA
+- TC_OH
+- TC_RIPLEY
+- TC_SCOTIA
+- TC_CREDISCOTIA
+- TC_PICHINCHA
+- TC_CENCOSUD
+- MENSAJE_TASA
+- COMPETITIVIDAD
+- PRINCIPALIDAD_CONSUMO
+- MENSAJE_VARIACION
+- ULTIMA_AGRUPACION
+- ULTIMO_RESULTADO
+- ULTIMO_MOTIVO
+- RANGO_RCI
+- ESTADO_CIVIL
+- GENERO
+- veces_acepto_producto
+- tiempo_desde_ultima_conversion
+- tiempo_desde_ultima_negacion
+- intentos_totales
+- meses_gestionados
+- dias_ultima_gestion
+- ultima_gestion
+- veces_sin_respuesta
+- veces_solicitud_seguimiento
+- promedio_dias_entre_gestiones
+- max_intentos_en_un_mes
+- veces_respuesta_positiva
+- veces_respuesta_negativa
+- _merge_variables
