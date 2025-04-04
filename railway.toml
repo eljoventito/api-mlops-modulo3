@@ -1,8 +1,8 @@
 [build]
 builder = "NIXPACKS"
 
-[variables]
-PYTHON_VERSION = "3.10"
+[build.env]
+NIXPACKS_PYTHON_VERSION = "3.10"
 
 
 [deploy]
