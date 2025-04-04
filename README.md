@@ -1,7 +1,7 @@
 # 📦 Proyecto Módulo 3 – Bootcamp de MLOps  
 **Luis Daniel Villacorta Tito**  
+**Modulo: Implementación y despliegue de un modelo con REST API**
 **Proyecto: Despliegue de API con FastAPI + PostgreSQL en Railway**
-
 ---
 
 ## ⚙️ Instalación Local
