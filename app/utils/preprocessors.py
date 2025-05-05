@@ -50,7 +50,7 @@ class LimpiarCategorias(BaseEstimator, TransformerMixin):
 class ValueFilterTransformer(BaseEstimator, TransformerMixin):
     def __init__(self, allowed_values):
         """
-        Transformador que reemplaza valores no permitidos en las columnas con None 
+        Transformador que reemplaza valores no permitidos en las columnas con None
         y genera un reporte de valores modificados.
 
         :param allowed_values: Diccionario con las listas de valores permitidos por columna.
@@ -137,10 +137,10 @@ class ConversionColumnas(BaseEstimator, TransformerMixin):
 class CustomMapper(BaseEstimator, TransformerMixin):
     def __init__(self, mappings, default_value=-1):
         self.mappings = mappings
-        self.default_value = default_value  
+        self.default_value = default_value
 
     def fit(self, X, y=None):
-        return self  
+        return self
 
     def transform(self, X):
         X = X.copy()
