@@ -1,15 +1,10 @@
-import yaml
 import pandas as pd
-import numpy as np
 import re
 from sklearn.base import BaseEstimator, TransformerMixin
-import os 
 from app.core.config import cargar_config
 
-
-
 # Cargar la configuración global
-config =cargar_config()
+config = cargar_config()
 
 COLUMNAS_MINIMAS_NECESARIAS = config["COLUMNAS_MINIMAS_NECESARIAS"]
 
@@ -31,10 +26,10 @@ BINARIZE_VARS = config["BINARIZE_VARS"]
 QUAL_MAPPINGS = config["QUAL_MAPPINGS"]
 valores_permitidos_cats = config["valores_permitidos_cats"]
 
-
 pld_columns = bancos_comerciales_pld + cajas_ahorro_pld + retail_financieras_pld
 tc_columns = bancos_comerciales_tc + cajas_ahorro_tc + retail_financieras_tc
 col_drop = tc_columns + pld_columns
+
 
 # 📌 Clase para limpiar valores categóricos
 class LimpiarCategorias(BaseEstimator, TransformerMixin):
@@ -49,6 +44,7 @@ class LimpiarCategorias(BaseEstimator, TransformerMixin):
         for col in self.variables:
             X[col] = X[col].apply(lambda val: "Missing" if pd.isna(val) else re.sub(r'\W+', '_', str(val)))
         return X.astype("object")
+
 
 # 📌 Clase para filtrar valores no permitidos
 class ValueFilterTransformer(BaseEstimator, TransformerMixin):
@@ -80,18 +76,18 @@ class ValueFilterTransformer(BaseEstimator, TransformerMixin):
 
                 # Reemplazar valores no permitidos por None
                 X.loc[mask_invalid, col] = None
-        
         return X
-    
+
     def get_report(self):
         """ Devuelve el reporte de valores eliminados en cada columna """
         return self.report
+
 
 # 📌 Clase para calcular totales y entidades de deuda
 class DeudaTransformer(BaseEstimator, TransformerMixin):
     def fit(self, X, y=None):
         return self
-    
+
     def transform(self, X):
         X = X.copy()
         X["Bancos_PLD_Total"] = X[bancos_comerciales_pld].sum(axis=1)
@@ -112,27 +108,30 @@ class DeudaTransformer(BaseEstimator, TransformerMixin):
         X["Tiene_Deuda_PLD"] = (X["PLD_Entidades"] > 0).astype(int)
         return X.drop(columns=col_drop, errors="ignore")
 
+
 # 📌 Clase para contar celulares
 class CelularTransformer(BaseEstimator, TransformerMixin):
     def fit(self, X, y=None):
         return self
-    
+
     def transform(self, X):
         X = X.copy()
         X["CANTIDAD_CELULARES"] = X[[col for col in X.columns if "CEL" in col]].notna().sum(axis=1)
         return X.drop(columns=["CELULAR1", "CELULAR2", "CELULAR3"], errors="ignore")
 
+
 # 📌 Clase para convertir columnas específicas
 class ConversionColumnas(BaseEstimator, TransformerMixin):
     def fit(self, X, y=None):
         return self
-    
+
     def transform(self, X):
         X = X.copy()
         X["PROPENSION"] = X["PROPENSION"].str.split("_").str[1].astype(float)
         X["RANGO_RCI"] = X["RANGO_RCI"].str.split("_").str[0].astype(float)
         X["COMPETITIVIDAD"] = X["COMPETITIVIDAD"].map(lambda x: 0 if x == "Missing" else 1)
         return X
+
 
 # 📌 Clase para mapear valores categóricos a numéricos
 class CustomMapper(BaseEstimator, TransformerMixin):
@@ -148,26 +147,32 @@ class CustomMapper(BaseEstimator, TransformerMixin):
         for col, mapping in self.mappings.items():
             X[col] = X[col].apply(lambda x: self.clean_value(x, mapping))
         return X
-    
+
     def clean_value(self, x, mapping):
         if pd.isna(x) or x in [None, "", " ", "  "]:
             x = "Missing"
         x = str(x).strip()
         return mapping.get(x, self.default_value)
 
+
 # 📌 Función para transformar `MENSAJE_VARIACION`
 def transformar_mensaje_variacion(X):
     X = X.copy()
-    X["ESTADO_TASA"] = X["MENSAJE_VARIACION"].apply(lambda x: 2 if "MENOS_TASA" in str(x) else 
-                                                          (1 if "MISMA_TASA" in str(x) else 
-                                                           (3 if "NUEVA" in str(x) else 0)))
-    
-    X["ESTADO_OFERTA"] = X["MENSAJE_VARIACION"].apply(lambda x: 0 if "MENOS_OFERTA" in str(x) else 
-                                                             (1 if "MISMA_OFERTA" in str(x) else 
-                                                              (3 if "NUEVA" in str(x) else 2)))
-    
-    X["NUEVA_OFERTA"] = X["MENSAJE_VARIACION"].apply(lambda x: 1 if "NUEVA" in str(x) else 0)
-    
+    X["ESTADO_TASA"] = X["MENSAJE_VARIACION"].apply(
+        lambda x: 2 if "MENOS_TASA" in str(x)
+        else 1 if "MISMA_TASA" in str(x)
+        else 3 if "NUEVA" in str(x)
+        else 0
+    )
+    X["ESTADO_OFERTA"] = X["MENSAJE_VARIACION"].apply(
+        lambda x: 0 if "MENOS_OFERTA" in str(x)
+        else 1 if "MISMA_OFERTA" in str(x)
+        else 3 if "NUEVA" in str(x)
+        else 2
+    )
+    X["NUEVA_OFERTA"] = X["MENSAJE_VARIACION"].apply(
+        lambda x: 1 if "NUEVA" in str(x) else 0
+    )
     return X
 
 
@@ -199,20 +204,18 @@ def validar_cabeceras_dataframe(df: pd.DataFrame, lista_columnas: list):
 
     return resultado
 
-def prediccion_o_inferencia(loaded_pipeline , loaded_model , datos_de_test):
-    #Dropeamos
+
+def prediccion_o_inferencia(loaded_pipeline, loaded_model, datos_de_test):
+    # Dropeamos
     datos_de_test = datos_de_test[COLUMNAS_MINIMAS_NECESARIAS]
     # Cast MSSubClass as object
     data_transform = loaded_pipeline.transform(datos_de_test)
     filter_transformer = loaded_pipeline.named_steps["filter_values"]
 
     report = filter_transformer.get_report()
-    data_transform = pd.DataFrame(data_transform, columns = loaded_pipeline.named_steps["drop_features"].get_feature_names_out())
-
+    data_transform = pd.DataFrame(data_transform, columns=loaded_pipeline.named_steps["drop_features"].get_feature_names_out())
     expected_features = loaded_model.get_raw_model().feature_names_in_
     data_transform = data_transform[expected_features]
-
-
-    predicciones =  loaded_model.predict(data_transform)
+    predicciones = loaded_model.predict(data_transform)
 
     return predicciones, report, data_transform

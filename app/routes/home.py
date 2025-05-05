@@ -3,6 +3,7 @@ from fastapi.responses import HTMLResponse
 
 router = APIRouter()
 
+
 @router.get("/", response_class=HTMLResponse)
 def home():
     return """
@@ -13,10 +14,11 @@ def home():
         <body style="font-family: Arial; max-width: 900px; margin: auto;">
             <h1>🚀 API Módulo 3 – Bootcamp de MLOps - DataPath</h1>
             <h2>📍 Luis Daniel Villacorta Tito</h2>
-            <p>Este proyecto despliega un modelo de Machine Learning mediante <strong>FastAPI</strong>, integrado con <strong>PostgreSQL</strong>, y publicado en <strong>Railway</strong>.</p>
+            <p>Este proyecto despliega un modelo de Machine Learning mediante <strong>FastAPI</strong>, \
+                integrado con <strong>PostgreSQL</strong>, y publicado en <strong>Railway</strong>.</p>
 
             <p>
-                👉 Accede a la documentación interactiva Swagger: 
+                👉 Accede a la documentación interactiva Swagger:
                 <a href="/docs" target="_blank">/docs</a>
             </p>
 

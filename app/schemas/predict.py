@@ -1,9 +1,11 @@
 from pydantic import BaseModel, Field
 from typing import Optional, Dict, Any
 
+
 class PrediccionConInputResponse(BaseModel):
     input: Dict[str, Any]
     prediction: float
+
 
 class RegistroCliente(BaseModel):
     DNI: Optional[str]

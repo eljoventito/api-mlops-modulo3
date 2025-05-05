@@ -1,12 +1,14 @@
 from app.schemas.predict import RegistroCliente, PrediccionConInputResponse
-
+import joblib
+import pandas as pd
+import os
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import List, Dict, Any
-import sys
 from app.core.config import cargar_config
 from app.utils.preprocessors import (
-    ValueFilterTransformer, LimpiarCategorias, DeudaTransformer,CelularTransformer,ConversionColumnas,CustomMapper,transformar_mensaje_variacion,
+    ValueFilterTransformer, LimpiarCategorias, DeudaTransformer, CelularTransformer,
+    ConversionColumnas, CustomMapper, transformar_mensaje_variacion,
     validar_cabeceras_dataframe,
     prediccion_o_inferencia
 )
@@ -22,11 +24,6 @@ __main__.CustomMapper = CustomMapper
 __main__.transformar_mensaje_variacion = transformar_mensaje_variacion
 __main__.CustomMapper = CustomMapper
 
-
-import joblib 
-import pandas as pd
-import os
-
 config = cargar_config()
 COLUMNAS_MINIMAS_NECESARIAS = config["COLUMNAS_MINIMAS_NECESARIAS"]
 
@@ -39,16 +36,14 @@ model_path = os.path.join("app", "models", "model_clasification.joblib")
 loaded_pipeline = joblib.load(pipeline_path)
 loaded_model = joblib.load(model_path)
 
+
 class InputData(BaseModel):
     data: List[Dict[str, Any]]  # Lista de diccionarios con los datos de entrada
-
-
 
 
 @router.post("/predict", response_model=PrediccionConInputResponse)
 def predict_cliente(data: RegistroCliente):
     df = pd.DataFrame([data.model_dump(by_alias=True)])
-    
     validacion = validar_cabeceras_dataframe(df, COLUMNAS_MINIMAS_NECESARIAS)
     if not validacion["valido"]:
         raise HTTPException(status_code=400, detail=validacion)
@@ -57,6 +52,4 @@ def predict_cliente(data: RegistroCliente):
 
     return {
         "prediction": int(pred[0]),
-        "input": data.model_dump(by_alias=True)
-    }
-
+        "input": data.model_dump(by_alias=True)}

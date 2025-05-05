@@ -8,6 +8,7 @@ load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
+
 @router.get("/check-db")
 def check_db_connection():
     try:
