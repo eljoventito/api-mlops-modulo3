@@ -25,11 +25,11 @@ jobs:
           source venv/bin/activate
           pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pytest flake8
 
       - name: 🧪 Run unit tests
         run: |
           source venv/bin/activate
+          export PYTHONPATH=$PYTHONPATH:$(pwd)
           pytest tests
 
       - name: 🧹 Run PEP8 code style check
