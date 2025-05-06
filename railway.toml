@@ -1,12 +1,4 @@
-[build]
-builder = "NIXPACKS"
-
-[build.env]
-NIXPACKS_PYTHON_VERSION = "3.10"
-
-
 [deploy]
-startCommand = "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
 numReplicas = 1
 healthcheckPath = "/health"
 healthcheckTimeout = 200
