@@ -1,39 +1,40 @@
-name: cd-cloudrun
+name: Pipeline de CD - GCP Modelo Clasificación
 
 on:
   push:
-    branches: [main]
+    branches: [main] 
+  pull_request:
+    branches: [main] 
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: ✅ Checkout code
+      - name: ✅ Descargar el código
         uses: actions/checkout@v3
 
-      - name: 🌐 Set up Docker Buildx
+      - name: 🌐 Configurar Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: 🔑 Log in to Docker Hub
+      - name: 🔑 Autenticarse en Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      - name: 🛠️ Build and Push Docker image
+      - name: 🛠️ Construir y subir imagen Docker
         run: |
           docker build -t ${{ secrets.DOCKER_USERNAME }}/api-mlops-modulo3:latest .
           docker push ${{ secrets.DOCKER_USERNAME }}/api-mlops-modulo3:latest
 
-      # 🔐 Autenticarse con la cuenta de servicio GCP
-      - name: 🔐 Authenticate to Google Cloud
+      - name: 🔐 Autenticarse en Google Cloud
         uses: google-github-actions/auth@v1
         with:
           credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
 
-      - name: 🚀 Set up Google Cloud CLI
+      - name: 🚀 Configurar CLI de Google Cloud
         uses: google-github-actions/setup-gcloud@v2
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: 🚧 Deploy to Cloud Run
+      - name: 🚧 Desplegar en Cloud Run
         run: |
           gcloud run deploy api-mlops-modulo3 \
             --image=docker.io/${{ secrets.DOCKER_USERNAME }}/api-mlops-modulo3:latest \

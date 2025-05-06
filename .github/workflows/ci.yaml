@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: Pipeline de CI - Modelo Clasificación
 
 on:
   push:
@@ -11,28 +11,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📥 Checkout code
+      - name: 📥 Descargar el código
         uses: actions/checkout@v3
 
-      - name: 🐍 Set up Python
+      - name: 🐍 Configurar Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.10"
 
-      - name: 📦 Install dependencies
+      - name: 📦 Instalar dependencias
         run: |
           python -m venv venv
           source venv/bin/activate
           pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: 🧪 Run unit tests
+      - name: 🧪 Ejecutar pruebas unitarias
         run: |
           source venv/bin/activate
           export PYTHONPATH=$PYTHONPATH:$(pwd)
           pytest tests
 
-      - name: 🧹 Run PEP8 code style check
+      - name: 🧹 Verificar estilo de código PEP8
         run: |
           source venv/bin/activate
           flake8 app tests
